@@ -16,14 +16,17 @@ class Weather extends React.Component {
   }
   
   render() {
+    const weather = this.props.weather;
+    const location = this.props.location;
     return (
       <div>
-        <h1>Weather {this.props.location.name}</h1>
-        <p>Lat : {this.props.location.latlng.lat}, Lon : {this.props.location.latlng.lng}</p>
-        {(this.props.weather.status === 'idle') && <p>Nothing to see here ...</p>}
-        {(this.props.weather.status === 'pending') && <p>Loading ...</p>}
-        {(this.props.weather.status === 'success') && <WeatherDisplay weather={this.props.weather.data} />}
-        {(this.props.weather.status === 'error') && <p>Oops ! Something went wrong ...</p>}
+        <h1>Weather {location.name}</h1>
+        <h2>{location.administrative && (location.administrative + ', ')}{location.country}</h2>
+        <p>Lat : {location.latlng.lat}, lon : {location.latlng.lng}</p>
+        {(weather.status === 'idle') && <p>Nothing to see here ...</p>}
+        {(weather.status === 'pending') && <p>Loading ...</p>}
+        {(weather.status === 'success') && <WeatherDisplay weather={weather.data} />}
+        {(weather.status === 'error') && <p>Oops ! Something went wrong ...</p>}
       </div>
     );
   }
@@ -31,7 +34,12 @@ class Weather extends React.Component {
 
 function WeatherDisplay(props) {
   return (
-    <p>Temperature : {props.weather.main.temp}</p>
+    <ul>
+      <li>Temperature : {props.weather.main.temp}</li>
+      <li>Feels like : {props.weather.main.feels_like}</li>
+      <li>Wind speed : {props.weather.wind.speed}</li>
+      <li>Wind direction : {props.weather.wind.deg}</li>
+    </ul>
   );
 }
 
