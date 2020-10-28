@@ -33,7 +33,7 @@ const asyncAction = (promise, name='') => (...args) => function(dispatch) {
 };
 
 const asyncReducer = (name = '') => (function (state=defaultState, action) {
-    if(action.name != name) return state;
+    if(action.name !== name) return state;
     switch(action.type) {
         case REQUEST:
         return {

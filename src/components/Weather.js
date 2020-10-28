@@ -4,12 +4,15 @@ import { asyncAction } from "../redux/async";
 import fetchWeather from '../redux/weather';
 
 class Weather extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   componentDidMount() {
     this.props.asyncWeather(this.props.location.latlng);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.location.latlng !== prevProps.location.latlng) {
+      this.props.asyncWeather(this.props.location.latlng);
+    }
   }
   
   render() {
@@ -17,10 +20,10 @@ class Weather extends React.Component {
       <div>
         <h1>Weather {this.props.location.name}</h1>
         <p>Lat : {this.props.location.latlng.lat}, Lon : {this.props.location.latlng.lng}</p>
-        {(this.props.status == 'idle') && <p>Nothing to see here ...</p>}
-        {(this.props.status == 'pending') && <p>Loading ...</p>}
-        {(this.props.status == 'success') && <WeatherDisplay weather={this.props.data} />}
-        {(this.props.status == 'error') && <p>Oops ! Something went wrong ...</p>}
+        {(this.props.weather.status === 'idle') && <p>Nothing to see here ...</p>}
+        {(this.props.weather.status === 'pending') && <p>Loading ...</p>}
+        {(this.props.weather.status === 'success') && <WeatherDisplay weather={this.props.weather.data} />}
+        {(this.props.weather.status === 'error') && <p>Oops ! Something went wrong ...</p>}
       </div>
     );
   }
@@ -32,7 +35,7 @@ function WeatherDisplay(props) {
   );
 }
 
-const mapStateToProps = state => (state.weather);
+const mapStateToProps = state => ({ weather: state.weather });
 const mapDispatchToProps = { asyncWeather: asyncAction(fetchWeather) };
 
 const WeatherContainer = connect(mapStateToProps, mapDispatchToProps)(Weather);
